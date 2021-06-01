@@ -1,0 +1,208 @@
+JS: JavaScript
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+JavaScript is a scripting language used to make web pages dynamic means to add more functionalities, interactivity, adding maps, multimedia, animation etc.......
+We can say it as 3rd layer of web programming after HTML and CSS.
+
+Let's understand what happens when we load a web page in browser
+  ---> When we laod a web page in a browser then actually we are running our code inside an execution enviorment (in this case is our web browser). Like a factory that takes
+       Raw materials and transforms those raw materials in to some prodcuts.
+       In this scenario factory is our web browser, Raw materials are our code, prodcuts are outpuyt which we see.
+       
+A common use of web browser is to dynamically modify code to update user interface using DOM.
+       
+Browser security
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Each browser tab has its own separate bucket for running code in (these buckets are called "execution environments" in technical terms) — this means that in most cases the code 
+in each tab is run completely separately, and the code in one tab cannot directly affect the code in another tab — or on another website. This is a good security measure — if 
+this were not the case, then pirates could start writing code to steal information from other websites, and other such bad things.
+
+JavaScript running order
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+When the browser encounters a block of JavaScript, it generally runs it in order, from top to bottom. This means that you need to be careful what order you put things in. For 
+example, let's return to the block of JavaScript we saw in our first example:
+
+Example:
+-----------------------------------------------
+const para = document.querySelector('p');
+
+para.addEventListener('click', updateName);
+
+function updateName() {
+  let name = prompt('Enter a new name');
+  para.textContent = 'Player 1: ' + name;
+}
+
+Here we are selecting a text paragraph (line 1), then attaching an event listener to it (line 3) so that when the paragraph is clicked, the updateName() code block is run.
+The updateName() code block (these types of reusable code blocks are called "functions") asks the user for a new name, and then inserts that name into the paragraph to update
+the display.
+
+If you swapped the order of the first two lines of code, it would no longer work — instead, you'd get an error returned in the browser developer console — TypeError: para 
+is undefined. This means that the para object does not exist yet, so we can't add an event listener to it.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Interpreted versus compiled code
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Interpreted languages codes are run from top to bottom and need not to be transform to some intermediate form before running it. We get the output as soon as we run the code.
+While in compiled languages codes are trasformed into some intermediate form before execution so that computer can execute it. Like C, C++, JAVA etc.....
+
+JS is a lightweight interpreted programming language. Web browser receiveds the JS code in its original form and then executes the code.
+From a technical standpoint, most modern JavaScript interpreters actually use a technique called just-in-time compiling to improve performance; the JavaScript source code gets
+compiled into a faster, binary format while the script is being used, so that it can be run as quickly as possible.
+
+Adding JavaScript
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+JavaScript can be added in 3 ways
+1) Inline
+2) Internal
+3) External
+
+1) Inline JavaScript
+
+function createParagraph() {
+  let para = document.createElement('p');
+  para.textContent = 'You clicked the button!';
+  document.body.appendChild(para);
+}
+<button onclick="createParagraph()">Click me!</button>
+You can try this version of our demo below.
+
+
+
+This demo has exactly the same functionality as in the previous two sections, except that the <button> element includes an inline onclick handler to make the function run when 
+the button is pressed.
+
+Please don't do this, however. It is bad practice to pollute your HTML with JavaScript, and it is inefficient — you'd have to include the onclick="createParagraph()" attribute 
+on every button you want the JavaScript to apply to.
+
+Using a pure JavaScript construct allows you to select all the buttons using one instruction. The code we used above to serve this purpose looks like this:
+
+const buttons = document.querySelectorAll('button');
+
+for(let i = 0; i < buttons.length ; i++) {
+  buttons[i].addEventListener('click', createParagraph);
+}
+This might be a bit longer than the onclick attribute, but it will work for all buttons — no matter how many are on the page, nor how many are added or removed. The JavaScript 
+does not need to be changed.
+
+Note: Try editing your version of apply-javascript.html and add a few more buttons into the file. When you reload, you should find that all of the buttons when clicked will 
+create a paragraph. Neat, huh?
+2) Internal JavaScript
+
+----> First of all, make a local copy of our example file apply-javascript.html. Save it in a directory somewhere sensible.
+----> Open the file in your web browser and in your text editor. You'll see that the HTML creates a simple web page containing a clickable button.
+----> Next, go to your text editor and add the following in your head — just before your closing </head> tag:
+
+<script>
+
+  // JavaScript goes here
+
+</script>
+----> Now we'll add some JavaScript inside our <script> element to make the page do something more interesting — add the following code just below the "// JavaScript goes here" l
+ine:
+
+document.addEventListener("DOMContentLoaded", function() {
+  function createParagraph() {
+    let para = document.createElement('p');
+    para.textContent = 'You clicked the button!';
+    document.body.appendChild(para);
+  }
+
+  const buttons = document.querySelectorAll('button');
+
+  for(let i = 0; i < buttons.length ; i++) {
+    buttons[i].addEventListener('click', createParagraph);
+  }
+});
+Save file and refresh the browser — now we should see that when you click the button, a new paragraph is generated and placed below.
+
+3) External JavaScript
+
+----> First, create a new file in the same directory as your sample HTML file. Call it script.js — make sure it has that .js filename extension, as that's how it is recognized 
+      as JavaScript.
+----> Replace current <script> element with the following:
+
+<script src="script.js" defer></script>
+Inside script.js, add the following script:
+function createParagraph() {
+  let para = document.createElement('p');
+  para.textContent = 'You clicked the button!';
+  document.body.appendChild(para);
+}
+
+const buttons = document.querySelectorAll('button');
+
+for(let i = 0; i < buttons.length ; i++) {
+  buttons[i].addEventListener('click', createParagraph);
+}
+Save and refresh browser, and you should see the same thing! It works just the same, but now we've got our JavaScript in an external file. This is generally a good thing in 
+terms of organizing your code and making it reusable across multiple HTML files. Plus, the HTML is easier to read without huge chunks of script dumped in it.
+
+
+Script loading strategies
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+There are number of issues involved while loading a web page in a browser. All HTMl are loaded as per their order. If we have some JavaScript in our code and need to manipulate 
+some HTML elemnt which is yet not loaded then this will cause some error and may be stop our page to be loaded.
+
+In the internal example, you can see this structure around the code:
+
+document.addEventListener("DOMContentLoaded", function() {
+  ...
+});
+This is an event listener, which listens for the browser's "DOMContentLoaded" event, which signifies that the HTML body is completely loaded and parsed. The JavaScript inside 
+this block will not run until after that event is fired, therefore the error is avoided (you'll learn about events later in the course).
+
+In the external example, we use a more modern JavaScript feature to solve the problem, the defer attribute, which tells the browser to continue downloading the HTML content 
+once the <script> tag element has been reached.
+
+<script src="script.js" defer></script>
+In this case both the script and the HTML will load simultaneously and the code will work.
+
+Note: In the external case, we did not need to use the DOMContentLoaded event because the defer attribute solved the problem for us. We didn't use the defer solution for the 
+internal JavaScript example because defer only works for external scripts.
+
+An old-fashioned solution to this problem used to be to put your script element right at the bottom of the body (e.g. just before the </body> tag), so that it would load after 
+all the HTML has been parsed. The problem with this solution is that loading/parsing of the script is completely blocked until the HTML DOM has been loaded. On larger sites with
+lots of JavaScript, this can cause a major performance issue, slowing down your site.
+
+async and defer
+There are actually two modern features we can use to bypass the problem of the blocking script — async and defer (which we saw above). Let's look at the difference between these
+two.
+
+Scripts loaded using the async attribute (see below) will download the script without blocking rendering the page and will execute it as soon as the script finishes downloading.
+You get no guarantee that scripts will run in any specific order, only that they will not stop the rest of the page from displaying. It is best to use async when the scripts in 
+the page run independently from each other and depend on no other script on the page.
+
+For example, if you have the following script elements:
+
+<script async src="js/vendor/jquery.js"></script>
+
+<script async src="js/script2.js"></script>
+
+<script async src="js/script3.js"></script>
+You can't rely on the order the scripts will load in. jquery.js may load before or after script2.js and script3.js and if this is the case, any functions in those scripts 
+depending on jquery will produce an error because jquery will not be defined at the time the script runs.
+
+<--- async should be used when you have a bunch of background scripts to load in, and you just want to get them in place as soon as possible. For example, maybe you have some game 
+data files to load, which will be needed when the game actually begins, but for now you just want to get on with showing the game intro, titles, and lobby, without them being 
+blocked by script loading. --->
+
+Scripts loaded using the defer attribute (see below) will run in the order they appear in the page and execute them as soon as the script and content are downloaded:
+
+<script defer src="js/vendor/jquery.js"></script>
+
+<script defer src="js/script2.js"></script>
+
+<script defer src="js/script3.js"></script>
+
+All the scripts with the defer attribute will load in the order they appear on the page. So in the second example, we can be sure that jquery.js will load before script2.js and
+script3.js and that script2.js will load before script3.js. They won't run until the page content has all loaded, which is useful if your scripts depend on the DOM being in 
+place (e.g. they modify one of more elements on the page).
+
+To summarize:
+
+----> async and defer both instruct the browser to download the script(s) in a separate thread, while the rest of the page (the DOM, etc.) is downloading, so the page loading is not 
+      blocked by the scripts.
+--->  If your scripts should be run immediately and they don't have any dependencies, then use async.
+--->  If your scripts need to wait for parsing and depend on other scripts and/or the DOM being in place, load them using defer and put their corresponding <script> elements in the 
+      order you want the browser to execute them.
+      
